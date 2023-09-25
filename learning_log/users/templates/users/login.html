@@ -1,0 +1,18 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+
+  {% if form.errors %}
+    <p>Login ou senha incorretos</p>
+  {% endif%}
+
+  <form method="post" action="{% url 'login' %}">
+      <!-- tag de segurança do django -->
+      {% csrf_token %}
+      <!-- tag de formatação de formulário do django -->
+      {{ form.as_p }}
+      <button name="submit">Entrar</button>
+      <input type="hidden" name="next" value="{% url 'index' %}"/>
+  </form>
+
+{% endblock content%}
