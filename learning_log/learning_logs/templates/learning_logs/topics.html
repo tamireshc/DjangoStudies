@@ -9,10 +9,10 @@
   <li>
     <a href="{% url 'topic' topic.id %}">{{topic}}</a>
   </li>
-  {% empty%}
+  {% empty %}
   <li>Não há topicos adicionados</li>
-  {% endfor%}
+  {% endfor %}
 </ul>
 <a href="{% url 'new_topic' %}">Adicionar tópicos</a>
 
-{% endblock content%}
+{% endblock content %}

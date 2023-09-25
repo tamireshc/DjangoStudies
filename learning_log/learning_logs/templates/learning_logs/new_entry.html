@@ -8,10 +8,10 @@
 
 <form action="{% url  'new_entry' topic.id %}" method="post">
   <!-- tag de segurança do django -->
-  {% csrf_token%}
+  {% csrf_token %}
   <!-- tag de formatação de formulário do django -->
   {{ form.as_p }}
   <button name="submit">Adicionar</button>
 </form>
 
-{% endblock content%}
+{% endblock content %}

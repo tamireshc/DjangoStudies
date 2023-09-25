@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .forms import Entryform, TopicForm
-from .models import Topic
+from .models import Entry, Topic
 
 # Create your views here.
 
@@ -62,3 +62,35 @@ def new_entry(request, topic_id):
 
     context = {"topic": topic, "form": form}
     return render(request, "learning_logs/new_entry.html", context)
+
+
+def edit_entry(request, entry_id):
+    """Edita uma anotação"""
+    entry = Entry.objects.get(id=entry_id)
+    topic = entry.topic
+
+    if request.method != "POST":
+        # Requisição inicial para criar o formulário preenchido
+        form = Entryform(instance=entry)
+
+    else:
+        # Dados de Post submetidos
+        form = Entryform(instance=entry, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("topic", args=[topic.id]))
+
+    context = {"entry": entry, "topic": topic, "form": form}
+    return render(request, "learning_logs/edit_entry.html", context)
+
+
+def delete_entry(request, entry_id):
+    entry = Entry.objects.get(id=entry_id)
+    topic = entry.topic
+
+    if request.method == "POST":
+        entry.delete()
+        return HttpResponseRedirect(reverse("topic", args=[topic.id]))
+
+    context = {"entry": entry, "topic": topic}
+    return render(request, "learning_logs/delete_entry.html", context)

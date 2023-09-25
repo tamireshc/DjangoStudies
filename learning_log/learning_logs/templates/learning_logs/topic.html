@@ -9,10 +9,13 @@
   <ul>
     {% for entry in entries %}
     <li>
-      <p>{{entry.text | linebreaks}}</p>
       <p>{{entry.date_added | date:'M d,Y H:i'}}</p>
+      <p>{{entry.text | linebreaks}}</p>
+      <button><a href="{% url 'edit_entry' entry.id %}">Editar</a></button>
+      <button><a href="{% url 'delete_entry' entry.id %}">Deletar</a></button>
     </li>
-      {% empty%}
+
+      {% empty %}
       <li>Não há registros</li>
     {% endfor %}
   </ul>

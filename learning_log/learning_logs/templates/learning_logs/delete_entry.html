@@ -1,0 +1,12 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+<p>{{ entry }}</p>
+
+        <form method="post" action="{% url 'delete_entry' entry.id  %}">
+          {% csrf_token %}
+          <input type="hidden" name="entry.id" value="{{ entry.id }}">
+          <input type="submit" value="Confirma Deleção">
+        </form>
+
+{% endblock content%}

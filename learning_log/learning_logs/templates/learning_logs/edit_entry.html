@@ -1,0 +1,20 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+
+<p>
+  <a href="{% url 'topic' topic.id %}">{{topic}}</a>
+</p>
+<p>Editar anotação</p>
+
+<form action="{% url 'edit_entry' entry.id%}" method="post">
+    <!-- tag de segurança do django -->
+    {% csrf_token %}
+    <!-- tag de formatação de formulário do django -->
+    {{ form.as_p }}
+
+    <button name="submit">Salvar</button>
+
+</form>
+
+{% endblock content%}
