@@ -14,6 +14,11 @@ def index(request):
     return render(request, "learning_logs/index.html")
 
 
+def page_404(request):
+    """Página 404 da aplicação"""
+    return render(request, "page_404.html")
+
+
 @login_required
 def topics(request):
     """Mostra os assuntos"""
@@ -28,7 +33,7 @@ def topic(request, topic_id):
     topic = Topic.objects.get(id=topic_id)
     # Somente permite ver anotações do tópico do usuário logado
     if topic.owner != request.user:
-        raise Http404
+        return render(request, "learning_logs/page_404.html")
     else:
         entries = topic.entry_set.order_by("-date_added")
         context = {"topic": topic, "entries": entries}
@@ -60,7 +65,7 @@ def new_entry(request, topic_id):
     topic = Topic.objects.get(id=topic_id)
 
     if topic.owner != request.user:
-        raise Http404
+        return render(request, "learning_logs/page_404.html")
     else:
         if request.method != "POST":
             # Nenhum dado submetido cria um formulário em branco
@@ -85,7 +90,7 @@ def edit_entry(request, entry_id):
     topic = entry.topic
 
     if topic.owner != request.user:
-        raise Http404
+        return render(request, "learning_logs/page_404.html")
 
     else:
         if request.method != "POST":
@@ -109,7 +114,7 @@ def delete_entry(request, entry_id):
     topic = entry.topic
 
     if topic.owner != request.user:
-        raise Http404
+        return render(request, "learning_logs/page_404.html")
     else:
         if request.method == "POST":
             entry.delete()
