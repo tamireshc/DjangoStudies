@@ -1,5 +1,5 @@
 # from django.shortcuts import render
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 
 # from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound
@@ -102,5 +102,13 @@ class TodoListAndCreate(generics.ListCreateAPIView):
 
 
 class TodoDetailChangeAndDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+
+
+# 2 Another form to do class view with functions restFramework and router
+
+
+class TodoViewSet(viewsets.ModelViewSet):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
