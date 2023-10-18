@@ -1,17 +1,22 @@
+from typing import List
+
 from fastapi import FastAPI, Header, HTTPException, Path, Response, status
 
-from models import Curso
+from models import Curso, cursos
 
-app = FastAPI()
-
-
-cursos = {
-    1: {"titulo": "Inicial", "aulas": 112, "horas": 58},
-    2: {"titulo": "Segundo", "aulas": 100, "horas": 20},
-}
+app = FastAPI(
+    title="Api Cursos",
+    version="0.0.1",
+    description="Uma api para aprender fastapi",
+)
 
 
-@app.get("/cursos")
+@app.get(
+    "/cursos",
+    description="Exibe todos os cursos cadastrados",
+    summary="Retorna todos os cursos",
+    response_model=List[Curso],
+)
 async def get_cursos():
     return cursos
 
@@ -26,7 +31,7 @@ async def get_curso(
     )
 ):
     try:
-        curso = cursos[id]
+        curso = cursos[id - 1]
         return curso
     except KeyError:
         raise HTTPException(
@@ -37,16 +42,18 @@ async def get_curso(
 
 @app.post("/cursos", status_code=status.HTTP_201_CREATED)
 async def post_curso(curso: Curso):
-    next_id = len(cursos) + 1
-    cursos[next_id] = curso
+    cursos.append(curso)
     return curso
 
 
 @app.put("/cursos/{id}")
 async def put_curso(id: int, curso: Curso):
-    if id in cursos.keys():
-        cursos[id] = curso
-        return curso
+    for curso in cursos:
+        if id == curso.id:
+            index = cursos.index(curso)
+            print("index", index)
+            cursos[1] = curso
+            return cursos[1]
     else:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
