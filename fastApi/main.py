@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import curso_router
+from routes import cursos_router
 
 
 app = FastAPI(
@@ -7,7 +7,7 @@ app = FastAPI(
     version="0.0.1",
     description="Uma api para aprender fastapi",
 )
-app.include_router(curso_router.router, tags=["cursos"])
+app.include_router(cursos_router.router, tags=["cursos"])
 
 
 if __name__ == "__main__":
