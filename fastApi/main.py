@@ -47,13 +47,13 @@ async def post_curso(curso: Curso):
 
 
 @app.put("/cursos/{id}")
-async def put_curso(id: int, curso: Curso):
+async def put_curso(id: int, cursoReq: Curso):
     for curso in cursos:
         if id == curso.id:
             index = cursos.index(curso)
             print("index", index)
-            cursos[1] = curso
-            return cursos[1]
+            cursos[index] = cursoReq
+        return cursos[index]
     else:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -63,8 +63,10 @@ async def put_curso(id: int, curso: Curso):
 
 @app.delete("/cursos/{id}")
 async def delete_curso(id: int):
-    if id in cursos.keys():
-        cursos.pop(id)
+    for curso in cursos:
+        if id == curso.id:
+            index = cursos.index(curso)
+            cursos.pop(index)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     else:
         raise HTTPException(
