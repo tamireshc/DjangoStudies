@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Path, Response, status
+from fastapi import FastAPI, Header, HTTPException, Path, Response, status
 
 from models import Curso
 
@@ -64,6 +64,20 @@ async def delete_curso(id: int):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Curso não encontrado",
         )
+
+
+@app.get("/calculadora")
+async def calculadora(
+    a: int,
+    b: int,
+    c: int,
+    x: str = Header(
+        default=None,
+    ),
+):
+    result = a + b + c
+    print(x)
+    return {"soma": result}
 
 
 if __name__ == "__main__":
