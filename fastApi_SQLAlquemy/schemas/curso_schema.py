@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 class CursoSchema(BaseModel):
-    id: Optional[int]
+    id: Optional[int] = None
     titulo: str
     aulas: int
     horas: int
