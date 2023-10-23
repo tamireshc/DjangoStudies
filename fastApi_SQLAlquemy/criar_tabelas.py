@@ -1,5 +1,5 @@
-from core.config import settings
-from core.database import engine
+from src.config import settings
+from src.config.database import engine
 
 
 async def create_tables() -> None:

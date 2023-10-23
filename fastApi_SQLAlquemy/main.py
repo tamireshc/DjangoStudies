@@ -1,14 +1,14 @@
 from fastapi import FastAPI
 
-from api.endpoints import curso
+from src.controller import curso
 
 app = FastAPI(
     title="Api Cursos",
     version="0.0.1",
     description="Uma api para aprender fastapi",
 )
-app.include_router(curso.router, tags=["cursos"])
 
+app.include_router(curso.router, prefix="/cursos", tags=["cursos"])
 
 if __name__ == "__main__":
     import uvicorn
