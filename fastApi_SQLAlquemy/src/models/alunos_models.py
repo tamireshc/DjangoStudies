@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from src.config import settings
+from src.config.config import settings
 
 
 class AlunosModel(settings.DBBaseModel):

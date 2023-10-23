@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from src.controller import curso
+from src.controller import aluno
 
 app = FastAPI(
     title="Api Cursos",
@@ -9,6 +10,7 @@ app = FastAPI(
 )
 
 app.include_router(curso.router, prefix="/cursos", tags=["cursos"])
+app.include_router(aluno.router, prefix="/alunos", tags=["alunos"])
 
 if __name__ == "__main__":
     import uvicorn

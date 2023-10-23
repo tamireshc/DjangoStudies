@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
-from src.config import settings
+from src.config.config import settings
 
 
 class CursoModel(settings.DBBaseModel):

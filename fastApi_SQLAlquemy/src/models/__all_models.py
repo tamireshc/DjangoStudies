@@ -1,2 +1,2 @@
-from models.alunos_models import AlunosModel
-from models.curso_model import CursoModel
+from src.models.alunos_models import AlunosModel
+from src.models.curso_model import CursoModel

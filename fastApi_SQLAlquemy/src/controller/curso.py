@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from models.curso_model import CursoModel
-from schemas.curso_schema import CursoSchema
+from src.models.curso_model import CursoModel
+from src.schemas.curso_schema import CursoSchema
 from src.config.deps import get_session
 
 router = APIRouter()
@@ -16,7 +16,9 @@ GS = get_session
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=CS)
 async def post_curso(curso: CursoSchema, db: AsyncSession = Depends(GS)):
-    novo_curso = CursoModel(titulo=curso.titulo, aulas=curso.aulas, horas=curso.horas)
+    novo_curso = CursoModel(
+        titulo=curso.titulo, aulas=curso.aulas, horas=curso.horas
+    )
 
     db.add(novo_curso)
     await db.commit()
@@ -42,11 +44,14 @@ async def get_curso(id: int, db: AsyncSession = Depends(get_session)):
             return curso
         else:
             raise HTTPException(
-                detail="Curso não encontrado", status_code=status.HTTP_404_NOT_FOUND
+                detail="Curso não encontrado",
+                status_code=status.HTTP_404_NOT_FOUND,
             )
 
 
-@router.put("/{id}", response_model=CursoSchema, status_code=status.HTTP_202_ACCEPTED)
+@router.put(
+    "/{id}", response_model=CursoSchema, status_code=status.HTTP_202_ACCEPTED
+)
 async def put_curso(
     id: int, curso: CursoSchema, db: AsyncSession = Depends(get_session)
 ):
@@ -63,7 +68,8 @@ async def put_curso(
 
         else:
             raise HTTPException(
-                detail="Curso não encontrado", status_code=status.HTTP_404_NOT_FOUND
+                detail="Curso não encontrado",
+                status_code=status.HTTP_404_NOT_FOUND,
             )
 
 
@@ -78,5 +84,6 @@ async def delete_curso(id: int, db: AsyncSession = Depends(get_session)):
             await db.commit()
         else:
             raise HTTPException(
-                detail="Curso não encontrado", status_code=status.HTTP_404_NOT_FOUND
+                detail="Curso não encontrado",
+                status_code=status.HTTP_404_NOT_FOUND,
             )
