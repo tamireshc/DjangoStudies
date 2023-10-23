@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import List, Optional
 
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
+from models.aluno import Aluno
 
 
 class Curso(SQLModel, table=True):
@@ -9,3 +10,5 @@ class Curso(SQLModel, table=True):
     titulo: str
     aulas: int
     horas: int
+
+    aulas: List["Aluno"] = Relationship()
