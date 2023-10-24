@@ -1,14 +1,11 @@
-from typing import List, Optional
+from typing import Optional
 
-from sqlmodel import Field, Relationship, SQLModel
-from models.aluno import Aluno
+from sqlmodel import Field, SQLModel
 
 
-class Curso(SQLModel, table=True):
+class CursoModel(SQLModel, table=True):
     __tablename__: str = "cursos"
     id: Optional[int] = Field(default=None, primary_key=True)
     titulo: str
     aulas: int
     horas: int
-
-    aulas: List["Aluno"] = Relationship()

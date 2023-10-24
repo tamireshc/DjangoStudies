@@ -2,11 +2,13 @@ from typing import Optional
 
 from sqlmodel import Field, Relationship, SQLModel
 
+from src.models.curso import CursoModel
 
-class Aluno(SQLModel, table=True):
+
+class AlunoModel(SQLModel, table=True):
     __tablename__: str = "alunos"
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
     name: str
-    curso_id: int = Field(default=None, foreign_key="curso.id")
+    curso_id: int = Field(default=None, foreign_key="cursos.id")
 
-    curso = Relationship()
+    curso: CursoModel = Relationship()

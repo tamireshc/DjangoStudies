@@ -1,5 +1,2 @@
-from models.curso import Curso
-from models.aluno import Aluno
-
-aluno = Aluno
-curso = Curso
+from models.aluno import AlunoModel
+from models.curso import CursoModel
