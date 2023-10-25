@@ -86,7 +86,7 @@ async def put_artigo(
                     detail="Usuário não tem permissão para atualizar o artigo",
                 )
 
-            await db.commit(artigo_att)
+            await db.commit()
             return artigo_att
 
         else:
