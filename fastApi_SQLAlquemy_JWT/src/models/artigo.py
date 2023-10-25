@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-
 
 from src.config.config import settings
 
@@ -10,4 +9,6 @@ class ArtigoModel(settings.DBBaseModel):
     id = Column(Integer, primary_key=True, autoincrement=True)
     titulo = Column(String(256))
     url_fonte = Column(String(256))
-    usuario_ir = Column(Integer, ForeignKey)
+    descricao = Column(String(256))
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"))
+    usuario = relationship("UsuarioModel", back_populates="artigos", lazy="joined")
