@@ -1,10 +1,10 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 from sqlalchemy.ext.declarative import declarative_base
 
 
 class Settings(BaseSettings):
     DB_URL: str = "postgresql+asyncpg://root:1234567@localhost:5432/faculdade3"
-    DBBaseModel = declarative_base()
+    # DBBaseModel = declarative_base()
 
     JWT_SECRET: str = "super_secreto"
     ALGORITHM: str = "HS256"
@@ -14,4 +14,5 @@ class Settings(BaseSettings):
         case_sensitive = True
 
 
+settings = Settings()
 settings = Settings()

@@ -1,9 +1,9 @@
-from src.config.config import settings
-from src.config.database import engine
+from config.config import settings
+from config.database import engine
 
 
 async def create_tables() -> None:
-    import src.models.__all_models
+    import models.__all_models
 
     print("Criando as tabelas no banco de dados")
 

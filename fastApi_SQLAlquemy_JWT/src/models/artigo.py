@@ -1,4 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
+
+# from sqlalchemy.orm import Base as DBBaseModel
 from sqlalchemy.orm import relationship
 
 from src.config.config import settings
