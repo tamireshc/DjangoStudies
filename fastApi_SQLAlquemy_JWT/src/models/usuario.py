@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
-from src.config.config import settings
+from config.config import settings
 
 
 class UsuarioModel(settings.DBBaseModel):
@@ -11,7 +11,7 @@ class UsuarioModel(settings.DBBaseModel):
     sobrenome = Column(String(256), nullable=True)
     email = Column(String(256), index=True, nullable=False, unique=True)
     senha = Column(String(256), nullable=False)
-    eh_admin = Column(bool, default=False)
+    eh_admin = Column(Boolean, default=False)
     artigos = relationship(
         "ArtigoModel",
         cascade="all, delete-orphan",

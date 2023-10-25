@@ -3,7 +3,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 # from sqlalchemy.orm import Base as DBBaseModel
 from sqlalchemy.orm import relationship
 
-from src.config.config import settings
+from config.config import settings
 
 
 class ArtigoModel(settings.DBBaseModel):
@@ -13,4 +13,6 @@ class ArtigoModel(settings.DBBaseModel):
     url_fonte = Column(String(256))
     descricao = Column(String(256))
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
-    usuario = relationship("UsuarioModel", back_populates="artigos", lazy="joined")
+    usuario = relationship(
+        "UsuarioModel", back_populates="artigos", lazy="joined"
+    )
