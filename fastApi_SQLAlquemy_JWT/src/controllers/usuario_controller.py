@@ -1,10 +1,14 @@
-from typing import List
-from fastapi import APIRouter, status, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
+from typing import Annotated, List
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
+from config.auth import autenticar, criar_token_acesso, get_current_user
+from config.deps import get_session
+from config.security import gerar_hash_senha
 from models.usuario import UsuarioModel
 from schemas.usuario_schema import (
     UsuarioSchemaArtigos,
@@ -12,10 +16,6 @@ from schemas.usuario_schema import (
     UsuarioSchemaUpdate,
     UsuarioShcemaCreate,
 )
-from config.deps import get_session
-from config.auth import get_current_user
-from config.security import gerar_hash_senha
-from config.auth import autenticar, criar_token_acesso
 
 router = APIRouter()
 
@@ -33,6 +33,17 @@ def get_logao(usario_logado: UsuarioModel = Depends(get_current_user)):
 async def post_usuario(
     usuario: UsuarioShcemaCreate, db: AsyncSession = Depends(get_session)
 ):
+    query = select(UsuarioModel).filter(UsuarioModel.email == usuario.email)
+    result = await db.execute(query)
+    has_usuario = result.unique().scalars().one_or_none()
+    print(has_usuario)
+
+    if has_usuario:
+        print("aki")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Email já cadastrado"
+        )
+
     novo_usuario: UsuarioModel = UsuarioModel(
         nome=usuario.nome,
         sobrenome=usuario.sobrenome,
@@ -51,7 +62,7 @@ async def get_usuarios(db: AsyncSession = Depends(get_session)):
     async with db:
         query = select(UsuarioModel)
         result = await db.execute(query)
-        usuarios = result.scalars().all()
+        usuarios = result.unique().scalars().all()
         return usuarios
 
 
@@ -60,7 +71,7 @@ async def get_usuario(id: int, db: AsyncSession = Depends(get_session)):
     async with db:
         query = select(UsuarioModel).filter(UsuarioModel.id == id)
         result = await db.execute(query)
-        usuario = result.scalars().one_or_none()
+        usuario = result.unique().scalars().one_or_none()
 
         if usuario:
             return usuario
@@ -84,7 +95,7 @@ async def put_usuario(
     async with db:
         query = select(UsuarioModel).filter(UsuarioModel.id == id)
         result = await db.execute(query)
-        usuario_att: UsuarioSchemaBase = result.scalars().one_or_none()
+        usuario_att = result.unique().scalars().one_or_none()
 
         if usuario_att:
             if usuario.nome:
@@ -113,7 +124,7 @@ async def delete_usuario(id: int, db: AsyncSession = Depends(get_session)):
     async with db:
         query = select(UsuarioModel).filter(UsuarioModel.id == id)
         result = await db.execute(query)
-        usuario = result.scalars().one_or_none()
+        usuario = result.unique().scalars().one_or_none()
 
         if usuario:
             await db.delete(usuario)
@@ -127,8 +138,8 @@ async def delete_usuario(id: int, db: AsyncSession = Depends(get_session)):
 
 @router.post("/login")
 async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: AsyncSession = Depends(get_logao),
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    db: AsyncSession = Depends(get_session),
 ):
     usuario = await autenticar(
         email=form_data.username, senha=form_data.password, db=db

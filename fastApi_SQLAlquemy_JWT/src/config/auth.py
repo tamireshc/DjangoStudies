@@ -1,16 +1,17 @@
-from pytz import timezone
-from typing import Optional
 from datetime import datetime, timedelta
-from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.future import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from jose import jwt, JWTError
-from config.deps import get_session
-from src.models.usuario import UsuarioModel
-from src.config.config import settings
-from src.config.security import verificar_senha
-from fastapi import Depends, HTTPException, status
+from typing import Optional
 
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from pytz import timezone
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+
+from config.config import settings
+from config.deps import get_session
+from config.security import verificar_senha
+from models.usuario import UsuarioModel
 
 oauth2_schema = OAuth2PasswordBearer(tokenUrl="/usuarios/login")
 
@@ -21,7 +22,7 @@ async def autenticar(
     async with db:
         query = select(UsuarioModel).filter(UsuarioModel.email == email)
         result = await db.execute(query)
-        usuario: UsuarioModel = result.scalars().one_or_none()
+        usuario: UsuarioModel = result.unique().scalars().one_or_none()
 
         if not usuario:
             return None
@@ -40,9 +41,7 @@ def criar_token(tipo_token: str, tempo_vida: timedelta, sub: str) -> str:
     payload["iat"] = datetime.now(tz=sp)
     payload["sub"] = str(sub)
 
-    return jwt.encode(
-        payload, settings.JWT_SECRET, algorithm=settings.ALGORITHM
-    )
+    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.ALGORITHM)
 
 
 def criar_token_acesso(sub: str) -> str:
@@ -78,13 +77,12 @@ async def get_current_user(
         raise credential_exception
 
     async with db:
-        query = select(UsuarioModel).filter(
-            UsuarioModel.email == username.email
-        )
+        query = select(UsuarioModel).filter(UsuarioModel.email == username)
+        print("user", username)
         result = await db.execute(query)
-        usuario: UsuarioModel = result.scalars().one_or_none()
-
+        usuario: UsuarioModel = result.unique().scalars().one_or_none()
+        print("userario", usuario.nome)
         if usuario:
-            raise credential_exception
-        else:
             return usuario
+        else:
+            raise credential_exception

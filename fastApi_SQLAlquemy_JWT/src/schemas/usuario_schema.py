@@ -24,9 +24,9 @@ class UsuarioSchemaArtigos(UsuarioSchemaBase):
     artigos: Optional[List[ArtigoSchema]]
 
 
-class UsuarioSchemaUpdate(UsuarioSchemaBase):
-    nome: Optional[str]
-    sobrenome: Optional[str]
-    email: Optional[EmailStr]
-    senha: Optional[str]
+class UsuarioSchemaUpdate(BaseModel):
+    nome: Optional[str] = None
+    sobrenome: Optional[str] = None
+    email: Optional[EmailStr] = None
+    senha: Optional[str] = None
     eh_admin: Optional[bool] = False
